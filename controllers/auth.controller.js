@@ -8,7 +8,7 @@ const authCookieOptions = {
   httpOnly: true,
   secure: NODE_ENV === "production",
   sameSite: "strict",
-  maxAge: 24 * 60 * 60 * 1000
+  maxAge: 24 * 60 * 60 * 1000,
 };
 
 export const signUp = async (req, res, next) => {
@@ -73,7 +73,7 @@ export const signIn = async (req, res, next) => {
 
     if (!user) {
       const error = new Error("User not found");
-      error.statuscode = 404;
+      error.statusCode = 404;
       throw error;
     }
 
@@ -81,7 +81,7 @@ export const signIn = async (req, res, next) => {
 
     if (!isPasswordValid) {
       const error = new Error("Invalid password");
-      error.statuscode = 401;
+      error.statusCode = 401;
     }
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
@@ -104,7 +104,7 @@ export const signIn = async (req, res, next) => {
 
 export const signOut = (req, res) => {
   res.clearCookie("token", authCookieOptions);
-  
+
   return res.status(200).json({
     success: true,
     message: "User signed out successfully",
