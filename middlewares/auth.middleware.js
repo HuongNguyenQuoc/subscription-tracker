@@ -4,17 +4,10 @@ import User from "../models/user.model.js";
 
 const authorize = async (req, res, next) => {
   try {
-    let token;
-
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-    }
+    const token = req.cookies?.token;
 
     if (!token) {
-      res.status(401).json({
+      return res.status(401).json({
         message: "Unauthorized",
       });
     }
@@ -24,16 +17,16 @@ const authorize = async (req, res, next) => {
     const user = await User.findById(decoded.userId).select("-password");
 
     if (!user) {
-      res.status(401).json({
+      return res.status(401).json({
         message: "Unauthorized",
       });
     }
 
     req.user = user;
 
-    next();
+    return next();
   } catch (error) {
-    res.status(401).json({
+    return res.status(401).json({
       message: "Unauthorized",
       error: error.message,
     });

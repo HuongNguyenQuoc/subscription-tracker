@@ -82,6 +82,7 @@ export const signIn = async (req, res, next) => {
     if (!isPasswordValid) {
       const error = new Error("Invalid password");
       error.statusCode = 401;
+      throw error;
     }
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
